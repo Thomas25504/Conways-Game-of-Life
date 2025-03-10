@@ -3,14 +3,14 @@
 
  Conway's Game of Life is a zero-player game created by mathematician John Conway in 1970. It's a fascinating simulation that models cellular automation — a grid of cells that evolve over time based on simple rules.
 
-Concept
+### Concept
 The game is played on a 2D grid where each cell can be in one of two states:
 🟩 Alive (1)
 ⬛ Dead (0)
 
 Each cell interacts with its eight immediate neighbors (horizontal, vertical, and diagonal).
 
-Rules of the Game
+### Rules of the Game
 Each cell's fate is determined by these four simple rules:
 
 Underpopulation:

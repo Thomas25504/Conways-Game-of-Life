@@ -1,7 +1,7 @@
 WIDTH = 1280
 HEIGHT = 720
 
-GRID_SIZE = 60
+GRID_SIZE = 100
 CELL_SIZE = WIDTH // GRID_SIZE
 
 ALIVE_COLOR = (200, 200, 200)
@@ -14,4 +14,4 @@ BUTTON_WIDTH, BUTTON_HEIGHT = 200, 40
 BUTTON_X, BUTTON_Y = (WIDTH - BUTTON_WIDTH), (HEIGHT - 50)
 
 
-TITLE = "Conway's Game of Life"
+TITLE = "Conway's Game of Life || Made by Tom Davidson"

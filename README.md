@@ -13,14 +13,14 @@ Each cell interacts with its eight immediate neighbors (horizontal, vertical, an
 ### Rules of the Game
 Each cell's fate is determined by these four simple rules:
 
-Underpopulation:
+#### Underpopulation:
 🔺 Any alive cell with fewer than 2 live neighbors dies (loneliness).
 
-Survival:
+#### Survival:
 🔹 Any alive cell with 2 or 3 live neighbors continues to live.
 
-Overpopulation:
+#### Overpopulation:
 🔻 Any alive cell with more than 3 live neighbors dies (overcrowding).
 
-Reproduction:
+#### Reproduction:
 🌱 Any dead cell with exactly 3 live neighbors becomes alive (birth).

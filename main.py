@@ -94,6 +94,3 @@ while running:
 
 
 pygame.quit()
-
-
-

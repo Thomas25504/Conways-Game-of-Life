@@ -71,6 +71,7 @@ def handle_button_click(pos):
     global reverse_colors
     global show_grid_lines
     global ALIVE_COLOR, DEAD_COLOR
+    global GRID_SIZE, CELL_SIZE
 
     x, y = pos
     if BUTTON_X <= x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= y <= BUTTON_Y + BUTTON_HEIGHT:
@@ -86,6 +87,16 @@ def handle_button_click(pos):
 
     if GRIDLINES_X <= x <= GRIDLINES_X + GRIDLINES_WIDTH and GRIDLINES_Y <= y <= GRIDLINES_Y + GRIDLINES_HEIGHT:
         show_grid_lines = not show_grid_lines
+
+    if GRID_SIZE_BUTTON_X <= x <= GRID_SIZE_BUTTON_X + GRID_SIZE_BUTTON_WIDTH and GRID_SIZE_BUTTON_Y <= y <= GRID_SIZE_BUTTON_Y + GRID_SIZE_BUTTON_HEIGHT:
+        if GRID_SIZE == GRID_SIZE_SMALL:
+            GRID_SIZE = GRID_SIZE_MEDIUM
+        elif GRID_SIZE == GRID_SIZE_MEDIUM:
+            GRID_SIZE = GRID_SIZE_LARGE
+        else:
+            GRID_SIZE = GRID_SIZE_SMALL
+        CELL_SIZE = WIDTH // GRID_SIZE
+        grid = [[0 for _ in range(GRID_SIZE)] for _ in range(GRID_SIZE)]
 
 def draw_button():
     global text_color
@@ -103,6 +114,9 @@ def draw_button():
     gridlines_button = DARK_BLUE if GRIDLINES_X <= mouse_x <= GRIDLINES_X + GRIDLINES_WIDTH and \
                                   GRIDLINES_Y <= mouse_y <= GRIDLINES_Y + GRIDLINES_HEIGHT else BLUE
     
+    grid_size_button_color = GREY if GRID_SIZE_BUTTON_X <= mouse_x <= GRID_SIZE_BUTTON_X + GRID_SIZE_BUTTON_WIDTH and \
+                                      GRID_SIZE_BUTTON_Y <= mouse_y <= GRID_SIZE_BUTTON_Y + GRID_SIZE_BUTTON_HEIGHT else DARG_GREY
+    
     text_color = ALIVE_COLOR if REVERSECOLORS_X <= mouse_x <= REVERSECOLORS_X + REVERSECOLORS_WIDTH and \
                                     REVERSECOLORS_Y <= mouse_y <= REVERSECOLORS_Y + REVERSECOLORS_HEIGHT else DEAD_COLOR
     
@@ -110,6 +124,7 @@ def draw_button():
     pygame.draw.rect(screen, clearbutton_color, (CLEARBUTTON_X, CLEARBUTTON_Y, CLEARBUTTON_WIDTH, CLEARBUTTON_HEIGHT))
     pygame.draw.rect(screen, reverscolor_button, (REVERSECOLORS_X, REVERSECOLORS_Y, REVERSECOLORS_WIDTH, REVERSECOLORS_HEIGHT))
     pygame.draw.rect(screen, gridlines_button, (GRIDLINES_X, GRIDLINES_Y, GRIDLINES_WIDTH, GRIDLINES_HEIGHT))
+    pygame.draw.rect(screen, grid_size_button_color, (GRID_SIZE_BUTTON_X, GRID_SIZE_BUTTON_Y, GRID_SIZE_BUTTON_WIDTH, GRID_SIZE_BUTTON_HEIGHT))
     
     # Button text
     font = pygame.font.SysFont(None, 30)
@@ -131,6 +146,11 @@ def draw_button():
     gridlines_text = "Show Grid Lines" if not show_grid_lines else "Hide Grid Lines"
     text = font.render(gridlines_text, True, WHITE)
     text_rect = text.get_rect(center=(GRIDLINES_X + BUTTON_WIDTH // 2, GRIDLINES_Y + BUTTON_HEIGHT // 2))
+    screen.blit(text, text_rect)
+
+    grid_size_text = "Grid Size: Small" if GRID_SIZE == GRID_SIZE_SMALL else "Grid Size: Medium" if GRID_SIZE == GRID_SIZE_MEDIUM else "Grid Size: Large"
+    text = font.render(grid_size_text, True, WHITE)
+    text_rect = text.get_rect(center=(GRID_SIZE_BUTTON_X + GRID_SIZE_BUTTON_WIDTH // 2, GRID_SIZE_BUTTON_Y + GRID_SIZE_BUTTON_HEIGHT // 2))
     screen.blit(text, text_rect)
 
 #Game Loop

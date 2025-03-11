@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 simulation_running = False
 reverse_colors = False
 mouse_held = False
+show_grid_lines = False
 text_color = DEAD_COLOR
 
 #Create 2D Grid
@@ -24,6 +25,8 @@ def draw_grid():
         for col in range(GRID_SIZE):
             color = ALIVE_COLOR if grid[row][col] else DEAD_COLOR
             pygame.draw.rect(screen, color, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            if show_grid_lines:
+                pygame.draw.rect(screen, GRID_LINE_COLOR, (col * CELL_SIZE, row * CELL_SIZE, CELL_SIZE, CELL_SIZE), 1)
 
 def update_grid():
     new_grid = [[grid[row][col] for col in range(GRID_SIZE)] for row in range(GRID_SIZE)]
@@ -55,8 +58,10 @@ def handle_click(pos):
         grid[row][col] = 1 if grid[row][col] == 0 else 0
 
 def handle_mouse_hold(pos):
+    global FPS
     x, y = pos
     col, row = x // CELL_SIZE, y // CELL_SIZE
+    
     if grid[row][col] == 0:
         grid[row][col] = 1
 
@@ -64,6 +69,7 @@ def handle_button_click(pos):
     global simulation_running
     global grid
     global reverse_colors
+    global show_grid_lines
     global ALIVE_COLOR, DEAD_COLOR
 
     x, y = pos
@@ -78,9 +84,11 @@ def handle_button_click(pos):
         reverse_colors = not reverse_colors
         ALIVE_COLOR, DEAD_COLOR = DEAD_COLOR, ALIVE_COLOR
 
+    if GRIDLINES_X <= x <= GRIDLINES_X + GRIDLINES_WIDTH and GRIDLINES_Y <= y <= GRIDLINES_Y + GRIDLINES_HEIGHT:
+        show_grid_lines = not show_grid_lines
+
 def draw_button():
     global text_color
-
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     button_color = DARK_GREEN if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and \
@@ -92,12 +100,16 @@ def draw_button():
     reverscolor_button = DEAD_COLOR if REVERSECOLORS_X <= mouse_x <= REVERSECOLORS_X + REVERSECOLORS_WIDTH and \
                                     REVERSECOLORS_Y <= mouse_y <= REVERSECOLORS_Y + REVERSECOLORS_HEIGHT else ALIVE_COLOR
     
+    gridlines_button = DARK_BLUE if GRIDLINES_X <= mouse_x <= GRIDLINES_X + GRIDLINES_WIDTH and \
+                                  GRIDLINES_Y <= mouse_y <= GRIDLINES_Y + GRIDLINES_HEIGHT else BLUE
+    
     text_color = ALIVE_COLOR if REVERSECOLORS_X <= mouse_x <= REVERSECOLORS_X + REVERSECOLORS_WIDTH and \
                                     REVERSECOLORS_Y <= mouse_y <= REVERSECOLORS_Y + REVERSECOLORS_HEIGHT else DEAD_COLOR
     
     pygame.draw.rect(screen, button_color, (BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT))
     pygame.draw.rect(screen, clearbutton_color, (CLEARBUTTON_X, CLEARBUTTON_Y, CLEARBUTTON_WIDTH, CLEARBUTTON_HEIGHT))
     pygame.draw.rect(screen, reverscolor_button, (REVERSECOLORS_X, REVERSECOLORS_Y, REVERSECOLORS_WIDTH, REVERSECOLORS_HEIGHT))
+    pygame.draw.rect(screen, gridlines_button, (GRIDLINES_X, GRIDLINES_Y, GRIDLINES_WIDTH, GRIDLINES_HEIGHT))
     
     # Button text
     font = pygame.font.SysFont(None, 30)
@@ -108,17 +120,21 @@ def draw_button():
 
     clearbutton_text = "Clear"
     text = font.render(clearbutton_text, True, WHITE)
-    text_rect = text.get_rect(center=(CLEARBUTTON_X + CLEARBUTTON_WIDTH // 2, CLEARBUTTON_Y + CLEARBUTTON_HEIGHT // 2))
+    text_rect = text.get_rect(center=(CLEARBUTTON_X + BUTTON_WIDTH // 2, CLEARBUTTON_Y + BUTTON_HEIGHT // 2))
     screen.blit(text, text_rect)
 
     reverscolor_text = "Reverse Colors"
     text = font.render(reverscolor_text, True, text_color)
-    text_rect = text.get_rect(center=(REVERSECOLORS_X + REVERSECOLORS_WIDTH // 2, REVERSECOLORS_Y + REVERSECOLORS_HEIGHT // 2))
-    screen.blit(text, text_rect)   
+    text_rect = text.get_rect(center=(REVERSECOLORS_X + BUTTON_WIDTH // 2, REVERSECOLORS_Y + BUTTON_HEIGHT // 2))
+    screen.blit(text, text_rect)
+
+    gridlines_text = "Show Grid Lines" if not show_grid_lines else "Hide Grid Lines"
+    text = font.render(gridlines_text, True, WHITE)
+    text_rect = text.get_rect(center=(GRIDLINES_X + BUTTON_WIDTH // 2, GRIDLINES_Y + BUTTON_HEIGHT // 2))
+    screen.blit(text, text_rect)
 
 #Game Loop
 running = True
-
 
 while running:
     screen.fill((0,0,0))
@@ -139,9 +155,12 @@ while running:
             mouse_held = False
 
     if mouse_held:
+        FPS = 60
         handle_mouse_hold(pygame.mouse.get_pos())
+    else:
+        FPS = 10
     
     pygame.display.flip()
-    clock.tick(15)
+    clock.tick(FPS)
 
 pygame.quit()

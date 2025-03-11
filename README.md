@@ -24,3 +24,7 @@ Each cell's fate is determined by these four simple rules:
 
 #### Reproduction:
 🌱 Any dead cell with exactly 3 live neighbors becomes alive (birth).
+
+### Screenshot
+![Screenshot](screenshots/screenshot.png)
+
